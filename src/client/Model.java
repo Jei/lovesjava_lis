@@ -17,6 +17,18 @@ public class Model {
 	public static User MyUser;
 	public static Admin MyAdmin;
 	
+	public void viewTravelsList() {
+		
+	}
+	
+	public void viewPrenotationsList() {
+		
+	}
+	
+	public void viewOwnTravelsList() {
+		
+	}
+	
 	// CLASSE UTENTE
 	public static class User extends Persona {
 
@@ -38,14 +50,6 @@ public class Model {
 		
 		public int delete() {
 			return 1;
-		}
-		
-		public void viewTravelsList() {
-			
-		}
-		
-		public void viewPrenotationsList() {
-			
 		}
 		
 		public void viewTravelInfo(String travelId) {
