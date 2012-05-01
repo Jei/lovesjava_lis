@@ -13,6 +13,10 @@ public class View {
 	//FORM DI LOGIN
 	public static class LoginForm extends JFrame {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		JTextField UserInput = new JTextField(10);
 		JPasswordField PassInput = new JPasswordField(10);
 		JPanel LogPanel = new JPanel();
@@ -80,6 +84,10 @@ public class View {
 	//FORM DI REGISTRAZIONE
 	public static class RegisteringForm extends JFrame {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		JTextField nameInput = new JTextField(10);
 		JTextField snameInput = new JTextField(10);
 		JTextField mailInput = new JTextField(10);
@@ -146,6 +154,11 @@ public class View {
 	// FRAME PRINCIPALE DELL'UTENTE
 	public static class UserPage extends JFrame {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public UserPage(User user) {
 			// finestra
 			super("Car Pooling");
@@ -187,6 +200,11 @@ public class View {
 	// FRAME PRINCIPALE DELL'AMMINISTRATORE
 public static class AdminPage extends JFrame {
 		
+		/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 		public AdminPage(Admin admin) {
 			// finestra
 			super("Car Pooling - Admin");
