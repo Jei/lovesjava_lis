@@ -29,6 +29,22 @@ public class Model {
 		
 	}
 	
+	public void viewUsersList() {
+		
+	}
+	
+	public void getUser(String mail) {
+		
+	}
+	
+	public void getTravel(String travelId) {
+		
+	}
+	
+	public void getPrenotation(String prenotationId) {
+		
+	}
+	
 	// CLASSE UTENTE
 	public static class User extends Persona {
 
@@ -129,14 +145,6 @@ public class Model {
 		}
 		
 		public void modifyInfo(String name, String sname, char[] pass) {
-			
-		}
-		
-		public void viewUsersList() {
-			
-		}
-		
-		public void viewUserInfo(String mail) {
 			
 		}
 		
