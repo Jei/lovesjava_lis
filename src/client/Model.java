@@ -9,6 +9,13 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
+
 
 public class Model {
 
@@ -16,6 +23,7 @@ public class Model {
 	 * @param args
 	 */
 
+	static SessionFactory MySessionFactory;
 	static Controller controller;
 	public static User MyUser;
 	public static Admin MyAdmin;
@@ -24,6 +32,8 @@ public class Model {
 		   '4' , '5' , '6' , '7' ,
 		   '8' , '9' , 'a' , 'b' ,
 		   'c' , 'd' , 'e' , 'f'};
+	static Session session = null;
+	
 	
 	/* Converte un array di byte in una stringa composta dai corrispondenti valori esadecimali.
 	 * Presa da http://mindprod.com/jgloss/hex.html
@@ -40,6 +50,16 @@ public class Model {
 			sb.append( hexChar [b[i] & 0x0f] );
 		}
 		return sb.toString();
+	}
+	
+	public static SessionFactory configureSessionFactory() throws HibernateException {
+		SessionFactory sessionFactory;
+		ServiceRegistry serviceRegistry;
+	    Configuration configuration = new Configuration();
+	    configuration.configure();
+	    serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();        
+	    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+	    return sessionFactory;
 	}
 	
 	public void viewTravelsList() {
@@ -72,13 +92,37 @@ public class Model {
 	
 	// CLASSE UTENTE
 	public static class User extends Persona {
-
+		
+		String id;
 		char gender;
 		Date birth;
-		String CF;
+		String cf;
 		
 		public User() {
-			super();
+		}
+		
+		public char getGender() {
+			return this.gender;
+		}
+		
+		public void setGender(char gender) {
+			this.gender = gender;
+		}
+		
+		public Date getBirth() {
+			return this.birth;
+		}
+		
+		public void setBirth(Date birth) {
+			this.birth = birth;
+		}
+		
+		public String getCf() {
+			return this.cf;
+		}
+		
+		public void setCf(String cf) {
+			this.cf = cf;
 		}
 		
 		public void modifyInfo(String name, String sname, char[] pass, Date birth, char gender) {
@@ -125,19 +169,68 @@ public class Model {
 	// CLASSE PERSONA
 	static public class Persona {
 		
+		String id;
 		String name;
 		String sname;
-		String mail;
+		String email;
 		char[] pass;
 		int adm;
 		
 		public Persona() {
 		}
 		
+		public String getId() {
+			return this.id;
+		}
+		
+		public void setId(String id) {
+			this.id = id;
+		}
+		
+		public String getName() {
+			return this.name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public String getSname() {
+			return this.sname;
+		}
+		
+		public void setSname(String sname) {
+			this.sname = sname;
+		}
+		
+		public String getEmail() {
+			return this.email;
+		}
+		
+		public void setEmail(String email) {
+			this.email = email;
+		}
+		
+		public char[] getPass() {
+			return this.pass;
+		}
+		
+		public void setPass(char[] pass) {
+			this.pass = pass;
+		}
+		
+		public int getAdm() {
+			return this.adm;
+		}
+		
+		public void setAdm(int adm) {
+			this.adm = adm;
+		}
+		
 		public int login(String mail, char[] pass) {
 			// qui ci andrà la richiesta al database
 			// intanto mettiamoci un falso login
-			byte[] md5pass = null;
+			/*byte[] md5pass = null;
 			byte[] md5correct = null;
 			char[] correctPassword = { 'm', 'a', 'i', 'o', 'r', 'c', 'a' };
 			try {
@@ -169,12 +262,12 @@ public class Model {
 				int isadm = 0; // 0 == user, 1 == admin
 				if (isadm == 0) {
 					MyUser = new User();
-					MyUser.mail = mail;
+					MyUser.email = mail;
 					MyUser.pass = pass;
 					MyUser.name = "Richard";
 					MyUser.sname = "Benson";
 					MyUser.gender = 'm';
-					MyUser.CF = "RCRDBNSN666P4U24";
+					MyUser.cf = "RCRDBNSN666P4U24";
 					try {
 						SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 						MyUser.birth = formatter.parse("1955/03/10");
@@ -184,7 +277,7 @@ public class Model {
 					}
 				} else {
 					MyAdmin = new Admin();
-					MyAdmin.mail = mail;
+					MyAdmin.email = mail;
 					MyAdmin.pass = pass;
 					MyAdmin.name = name;
 					MyAdmin.sname = sname;
@@ -192,7 +285,16 @@ public class Model {
 				return 1;
 			} else {
 				return 0;
-			}
+			}*/
+			
+			MyUser = DAL.DalRetrieveUserInfo(mail);
+			
+			MyUser.email = mail;
+			MyUser.pass = pass;
+			MyUser.name = "Richard";
+			MyUser.sname = "Benson";
+			
+			return 1;
 			
 		
 		}
@@ -297,6 +399,27 @@ public class Model {
 		
 		public int sendFeedback() {
 			return 1;
+		}
+		
+	}
+	
+	static public class DAL {
+		
+		public static User DalRetrieveUserInfo(String email) throws HibernateException {
+			try {
+				System.out.println("Apro la connessione.");
+				session = MySessionFactory.openSession();
+				System.out.println("Chiudo la connessione.");
+				session.close();
+			} catch(Throwable he) {
+				System.out.println(he.toString());
+				he.printStackTrace();
+			}
+				//session.beginTransaction();
+				// roba che recupera l'utente dalla tabella
+				//session.getTransaction().commit();
+			User person = new User();
+			return person;
 		}
 		
 	}

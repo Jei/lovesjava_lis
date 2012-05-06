@@ -7,6 +7,9 @@ import client.Model.*;
 
 import java.awt.event.*;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
 public class Controller {
 
 	static View view;
@@ -207,6 +210,7 @@ public class Controller {
 		Model model = new Model();
 		View view = new View();
 		Controller controller = new Controller(model, view);
+		Model.MySessionFactory = Model.configureSessionFactory();
 	}
 
 }
