@@ -3,7 +3,7 @@
 package client;
 
 import java.security.*;
-import java.sql.Time;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -32,8 +32,6 @@ public class Model {
 		   '4' , '5' , '6' , '7' ,
 		   '8' , '9' , 'a' , 'b' ,
 		   'c' , 'd' , 'e' , 'f'};
-	static Session session = null;
-	
 	
 	/* Converte un array di byte in una stringa composta dai corrispondenti valori esadecimali.
 	 * Presa da http://mindprod.com/jgloss/hex.html
@@ -53,13 +51,36 @@ public class Model {
 	}
 	
 	public static SessionFactory configureSessionFactory() throws HibernateException {
-		SessionFactory sessionFactory;
+		SessionFactory sf = null;
 		ServiceRegistry serviceRegistry;
-	    Configuration configuration = new Configuration();
-	    configuration.configure();
-	    serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();        
-	    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-	    return sessionFactory;
+		Configuration configuration = null;
+		try {
+			configuration = new Configuration()  
+	    		.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect")
+	    		.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/CarPooling")
+	    		.setProperty("hibernate.connection.username", "root")
+	    		.setProperty("hibernate.connection.password", "root")
+	    		.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver")
+	    		.addResource("hres/User.hbm.xml");
+		} catch (Throwable he) {
+			System.out.println(he.toString());
+			he.printStackTrace();
+		}
+	    try {
+	    	configuration.configure();
+	    } catch(HibernateException he) {
+	    	System.out.println(he.toString());
+			he.printStackTrace();
+	    }
+	    serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
+	    try {
+	    	sf = configuration.buildSessionFactory(serviceRegistry);
+	    } catch(HibernateException he) {
+	    	System.out.println(he.toString());
+			he.printStackTrace();
+	    }
+	    MySessionFactory = sf;
+	    return sf;
 	}
 	
 	public void viewTravelsList() {
@@ -90,15 +111,57 @@ public class Model {
 		
 	}
 	
+	public static int registerUser(String email, String name, String sname, Date birth, char gender, String cf, char[] pass) {
+		byte[] md5pass = null;
+		String hexString;
+		User newUser = new User(); // Cpt. Obvious goes programming!
+		
+		try {
+			// inizializzo l'oggetto per creare il digest
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			// resetto l'oggetto
+			md.reset();
+			String temp1 = new String(pass);
+			md.update(temp1.getBytes());
+			md5pass = md.digest();
+			hexString = byteArrayToHexString(md5pass);
+		} catch(NoSuchAlgorithmException e1) {
+			System.out.println(e1.toString());
+			e1.printStackTrace();
+			return 0;
+		}
+		
+		newUser.setName(name);
+		newUser.setSname(sname);
+		newUser.setEmail(email);
+		newUser.setBirth(birth);
+		newUser.setGender(gender);
+		newUser.setCf(cf);
+		newUser.setPass(hexString);
+		newUser.setAdm(0);
+		
+		DAL.DalCreateUser(newUser);
+		
+		return 1;
+	}
+	
 	// CLASSE UTENTE
 	public static class User extends Persona {
 		
-		String id;
+		String userId;
 		char gender;
 		Date birth;
 		String cf;
 		
 		public User() {
+		}
+		
+		public String getId() {
+			return this.userId;
+		}
+		
+		public void setId(String id) {
+			this.userId = id;
 		}
 		
 		public char getGender() {
@@ -169,22 +232,22 @@ public class Model {
 	// CLASSE PERSONA
 	static public class Persona {
 		
-		String id;
+		String personaId;
 		String name;
 		String sname;
 		String email;
-		char[] pass;
+		String pass;
 		int adm;
 		
 		public Persona() {
 		}
 		
 		public String getId() {
-			return this.id;
+			return this.personaId;
 		}
 		
 		public void setId(String id) {
-			this.id = id;
+			this.personaId = id;
 		}
 		
 		public String getName() {
@@ -211,11 +274,11 @@ public class Model {
 			this.email = email;
 		}
 		
-		public char[] getPass() {
+		public String getPass() {
 			return this.pass;
 		}
 		
-		public void setPass(char[] pass) {
+		public void setPass(String pass) {
 			this.pass = pass;
 		}
 		
@@ -230,10 +293,11 @@ public class Model {
 		public int login(String mail, char[] pass) {
 			// qui ci andrà la richiesta al database
 			// intanto mettiamoci un falso login
-			/*byte[] md5pass = null;
+			byte[] md5pass = null;
 			byte[] md5correct = null;
 			char[] correctPassword = { 'm', 'a', 'i', 'o', 'r', 'c', 'a' };
-			try {
+			String hexString;
+			/*try {
 				// inizializzo l'oggetto per creare il digest
 				MessageDigest md = MessageDigest.getInstance("MD5");
 				// resetto l'oggetto
@@ -252,7 +316,7 @@ public class Model {
 				System.out.println("mail: " + mail);
 				System.out.println("password: " + temp);
 				System.out.println("correctPassword: " + temp1);
-				String hexString = byteArrayToHexString(md5pass);
+				hexString = byteArrayToHexString(md5pass);
 				System.out.println("MD5 password: " + hexString);
 			} catch (NoSuchAlgorithmException e1) {
 				e1.printStackTrace();
@@ -263,7 +327,7 @@ public class Model {
 				if (isadm == 0) {
 					MyUser = new User();
 					MyUser.email = mail;
-					MyUser.pass = pass;
+					MyUser.pass = hexString;
 					MyUser.name = "Richard";
 					MyUser.sname = "Benson";
 					MyUser.gender = 'm';
@@ -278,7 +342,7 @@ public class Model {
 				} else {
 					MyAdmin = new Admin();
 					MyAdmin.email = mail;
-					MyAdmin.pass = pass;
+					MyAdmin.pass = hexString;
 					MyAdmin.name = name;
 					MyAdmin.sname = sname;
 				}
@@ -288,11 +352,6 @@ public class Model {
 			}*/
 			
 			MyUser = DAL.DalRetrieveUserInfo(mail);
-			
-			MyUser.email = mail;
-			MyUser.pass = pass;
-			MyUser.name = "Richard";
-			MyUser.sname = "Benson";
 			
 			return 1;
 			
@@ -406,20 +465,43 @@ public class Model {
 	static public class DAL {
 		
 		public static User DalRetrieveUserInfo(String email) throws HibernateException {
+			Session session = null;
 			try {
 				System.out.println("Apro la connessione.");
 				session = MySessionFactory.openSession();
+				session.beginTransaction();
+				// roba che recupera l'utente dalla tabella
+				session.getTransaction().commit();
 				System.out.println("Chiudo la connessione.");
 				session.close();
 			} catch(Throwable he) {
 				System.out.println(he.toString());
 				he.printStackTrace();
 			}
-				//session.beginTransaction();
-				// roba che recupera l'utente dalla tabella
-				//session.getTransaction().commit();
 			User person = new User();
 			return person;
+		}
+		
+		public static int DalCreateUser(User newUser) {
+			Session session = null;
+			
+			try {
+				System.out.println("Apro la connessione.");
+				session = MySessionFactory.openSession();
+				System.out.println("Comincio la transazione");
+				session.beginTransaction();
+				session.save(newUser);
+				// roba che crea il nuovo utente
+				System.out.println("Committo la transazione.");
+				session.getTransaction().commit();
+				System.out.println("Chiudo la connessione.");
+				session.close();
+			} catch(Throwable he) {
+				System.out.println(he.toString());
+				he.printStackTrace();
+				return 0;
+			}
+			return 1;
 		}
 		
 	}

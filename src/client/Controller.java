@@ -6,9 +6,10 @@ import client.View.*;
 import client.Model.*;
 
 import java.awt.event.*;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 
 public class Controller {
 
@@ -25,6 +26,7 @@ public class Controller {
 		Controller.view = view;
 		Controller.model = model;
 		MyLogForm.setVisible(true); // visualizzo il frame di login
+		Model.configureSessionFactory();
 	}
 
 	//LISTENER PER BOTTONE REGISTRAZIONE
@@ -169,12 +171,25 @@ public class Controller {
 	//LISTENER PER BOTTONE INVIO REGISTRAZIONE
 	public static class RegistrationSend implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
-			// controllo se tutti i campi sono stati riempiti
-    		// controllo se passInput e confirmInput coincidono
-    		// recupero tutti i dati
-    		// invio la richiesta di registrazione
-    		// a registrazione completata riapro la schermata di login
-    		// altrimenti visualizzo errore e rimango alla schermata attuale
+			String name = MyRegForm.nameInput.getText();
+			String sname = MyRegForm.snameInput.getText();
+			String email = MyRegForm.mailInput.getText();
+			String cf = MyRegForm.cfInput.getText();
+			char[] pass1 = MyRegForm.passInput.getPassword();
+			char[] pass2 = MyRegForm.confirmInput.getPassword();
+			char gender = 'm';
+			Date birth = null;
+			try {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+				birth = formatter.parse("1955/03/10");
+			} catch (ParseException e) {
+				System.out.println(e.toString());
+				e.printStackTrace();
+			}
+			
+			if (name != "" & sname != "" & email != "" & cf != "" & pass1 != null & Arrays.equals(pass1, pass2)) {
+				Model.registerUser(email, name, sname, birth, gender, cf, pass1);
+			}
 		}
 	}
 	
@@ -210,7 +225,6 @@ public class Controller {
 		Model model = new Model();
 		View view = new View();
 		Controller controller = new Controller(model, view);
-		Model.MySessionFactory = Model.configureSessionFactory();
 	}
 
 }
