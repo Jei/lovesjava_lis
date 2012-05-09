@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="client.model">
+	<class name="User" table="User">
+		<id name="id" column="USER_ID">
+			<generator class="native"/>
+		</id>
+		<property name="name" column="USER_NAME"/>
+		<property name="sname" column="USER_SNAME" />
+		<property name="email" column="USER_EMAIL" />
+		<property name="pass" column="USER_PASS" />
+		<property name="adm" column="USER_ADM" />
+		<property name="gender" column="USER_GENDER" />
+		<property name="birth" column="USER_BIRTH" />
+		<property name="cf" column="USER_CF" />
+	</class>
+</hibernate-mapping> 

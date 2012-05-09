@@ -4,7 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.*;
 import client.Controller.*;
-import client.Model.*;
+import client.model.Logic;
+import client.model.User;
 
 public class View {
 	
@@ -87,6 +88,9 @@ public class View {
 		/**
 		 * 
 		 */
+		String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+				"16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
+		String[] months = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
 		private static final long serialVersionUID = 1L;
 		JTextField nameInput = new JTextField(10);
 		JTextField snameInput = new JTextField(10);
@@ -94,6 +98,8 @@ public class View {
 		JPasswordField passInput = new JPasswordField(10);
 		JPasswordField confirmInput = new JPasswordField(10);
 		JTextField cfInput = new JTextField(10);
+		JList dayInput = new JList(days);
+		JList monthInput = new JList(months);
 		
 		public RegisteringForm() {
 			
@@ -169,7 +175,7 @@ public class View {
 			
 			MenuPanel.setLayout(new BoxLayout(MenuPanel, BoxLayout.PAGE_AXIS));
 			
-			MenuPanel.add(new JLabel("Benvenuto " + user.name + " " + user.sname));
+			MenuPanel.add(new JLabel("Benvenuto " + user.getName() + " " + user.getSname()));
 			
 			JButton ViewOffersButton = new JButton("Visualizza offerte");
 			MenuPanel.add(ViewOffersButton);
@@ -205,7 +211,7 @@ public static class AdminPage extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-		public AdminPage(Admin admin) {
+		public AdminPage(User admin) {
 			// finestra
 			super("Car Pooling - Admin");
 			
@@ -215,7 +221,7 @@ public static class AdminPage extends JFrame {
 			
 			AdMenuPanel.setLayout(new BoxLayout(AdMenuPanel, BoxLayout.PAGE_AXIS));
 			
-			AdMenuPanel.add(new JLabel("Benvenuto, amministratore " + admin.name + " " + admin.sname));
+			AdMenuPanel.add(new JLabel("Benvenuto, amministratore " + admin.getName() + " " + admin.getSname()));
 			
 			JButton ExitButtonAd = new JButton("Esci");
 			AdMenuPanel.add(ExitButtonAd);

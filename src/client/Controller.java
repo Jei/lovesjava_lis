@@ -3,7 +3,7 @@
 package client;
 
 import client.View.*;
-import client.Model.*;
+import client.model.*;
 
 import java.awt.event.*;
 import java.text.ParseException;
@@ -14,19 +14,16 @@ import java.util.Date;
 public class Controller {
 
 	static View view;
-	static Model model;
-	static Persona MyPersona;
 	static RegisteringForm MyRegForm;
 	static UserPage MyUserPage;
 	static AdminPage MyAdminPage;
 	static LoginForm MyLogForm = new LoginForm();
 	
 	//COSTRUTTORE
-	public Controller(Model model, View view) {
+	public Controller(View view) {
 		Controller.view = view;
-		Controller.model = model;
 		MyLogForm.setVisible(true); // visualizzo il frame di login
-		Model.configureSessionFactory();
+		client.model.Logic.configureSessionFactory();
 	}
 
 	//LISTENER PER BOTTONE REGISTRAZIONE
@@ -80,11 +77,11 @@ public class Controller {
 		public void actionPerformed(ActionEvent evt) {
 			String ui = MyLogForm.UserInput.getText();
 			char[] pi = MyLogForm.PassInput.getPassword();
-			MyPersona = new Persona();
-			if (MyPersona.login(ui, pi) == 1) { // se il login va a buon fine
+			Logic.MyUser = new User();
+			if (Logic.MyUser.login(ui, pi) == 1) { // se il login va a buon fine
 	    		MyLogForm.dispose(); // rimuovo il frame di login
-				if (MyPersona.adm == 0) { // se l'utente non è admin
-					MyUserPage = new UserPage(Model.MyUser); // creo un nuovo frame utente
+				if (Logic.MyUser.adm == 0) { // se l'utente non è admin
+					MyUserPage = new UserPage(Logic.MyUser); // creo un nuovo frame utente
 					MyUserPage.addWindowListener(new WindowListener() {
 		    			@Override
 		    			public void windowOpened(WindowEvent e) {
@@ -123,7 +120,7 @@ public class Controller {
 		    		});
 					MyUserPage.setVisible(true);
 				} else {
-					MyAdminPage = new AdminPage(Model.MyAdmin); // creo un nuovo frame utente
+					MyAdminPage = new AdminPage(client.model.Logic.MyUser); // creo un nuovo frame utente
 					MyAdminPage.addWindowListener(new WindowListener() {
 		    			@Override
 		    			public void windowOpened(WindowEvent e) {
@@ -180,6 +177,7 @@ public class Controller {
 			char gender = 'm';
 			Date birth = null;
 			try {
+				//TODO
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 				birth = formatter.parse("1955/03/10");
 			} catch (ParseException e) {
@@ -188,7 +186,12 @@ public class Controller {
 			}
 			
 			if (name != "" & sname != "" & email != "" & cf != "" & pass1 != null & Arrays.equals(pass1, pass2)) {
-				Model.registerUser(email, name, sname, birth, gender, cf, pass1);
+				if (client.model.Logic.registerUser(email, name, sname, birth, gender, cf, pass1) == 1) {
+					MyLogForm = new LoginForm();
+					MyRegForm.dispose();
+				} else {
+					
+				}
 			}
 		}
 	}
@@ -204,7 +207,7 @@ public class Controller {
 	//LISTENER PER BOTTONE USCITA DA PAGINA UTENTE
 	public static class ExitUserPage implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
-			if (Model.MyUser.logout() == 1) {
+			if (client.model.Logic.MyUser.logout() == 1) {
 				MyLogForm = new LoginForm();
 				MyUserPage.dispose();
 			}
@@ -214,7 +217,7 @@ public class Controller {
 	//LISTENER PER BOTTONE USCITA DA PAGINA ADMIN
 	public static class ExitUserPageAd implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
-			if (Model.MyAdmin.logout() == 1) {
+			if (client.model.Logic.MyUser.logout() == 1) {
 				MyLogForm = new LoginForm();
 				MyAdminPage.dispose();
 			}
@@ -222,9 +225,8 @@ public class Controller {
 	}
 	
 	public static void main(String[] args) {
-		Model model = new Model();
 		View view = new View();
-		Controller controller = new Controller(model, view);
+		Controller controller = new Controller(view);
 	}
 
 }
