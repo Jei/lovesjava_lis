@@ -91,6 +91,8 @@ public class View {
 		String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
 				"16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
 		String[] months = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+		String[] years = {"1990", "1991", "1992", "1993", "1994", "1995"};
+		String[] genders = {"m", "f"};
 		private static final long serialVersionUID = 1L;
 		JTextField nameInput = new JTextField(10);
 		JTextField snameInput = new JTextField(10);
@@ -98,8 +100,14 @@ public class View {
 		JPasswordField passInput = new JPasswordField(10);
 		JPasswordField confirmInput = new JPasswordField(10);
 		JTextField cfInput = new JTextField(10);
-		JList dayInput = new JList(days);
-		JList monthInput = new JList(months);
+		JList dayList = new JList(days);
+		JList monthList = new JList(months);
+		JList yearList = new JList(years);
+		JScrollPane dayInput = new JScrollPane(dayList);
+		JScrollPane monthInput = new JScrollPane(monthList);
+		JScrollPane yearInput = new JScrollPane(yearList);
+		JList genderList = new JList(genders);
+		JScrollPane genderInput = new JScrollPane(genderList);
 		
 		public RegisteringForm() {
 			
@@ -129,6 +137,23 @@ public class View {
 			inputPanel.add(passInput);
 			inputPanel.add(new JLabel("Conferma password:"));
 			inputPanel.add(confirmInput);
+			// data di nascita
+			dayList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			dayList.setLayoutOrientation(JList.VERTICAL);
+			dayList.setVisibleRowCount(1);
+			monthList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			monthList.setLayoutOrientation(JList.VERTICAL);
+			monthList.setVisibleRowCount(1);
+			yearList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			yearList.setLayoutOrientation(JList.VERTICAL);
+			yearList.setVisibleRowCount(1);
+			inputPanel.add(dayInput);
+			inputPanel.add(monthInput);
+			inputPanel.add(yearInput);
+			genderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			genderList.setLayoutOrientation(JList.VERTICAL);
+			genderList.setVisibleRowCount(1);
+			inputPanel.add(genderInput);
 			// codice fiscale
 			inputPanel.add(new JLabel("Codice Fiscale:"));
 			inputPanel.add(cfInput);

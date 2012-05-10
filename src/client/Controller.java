@@ -174,23 +174,28 @@ public class Controller {
 			String cf = MyRegForm.cfInput.getText();
 			char[] pass1 = MyRegForm.passInput.getPassword();
 			char[] pass2 = MyRegForm.confirmInput.getPassword();
-			char gender = 'm';
 			Date birth = null;
 			try {
-				//TODO
+				String year = (String) MyRegForm.yearList.getSelectedValue();
+				String month = (String) MyRegForm.monthList.getSelectedValue();
+				String day = (String) MyRegForm.dayList.getSelectedValue();
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-				birth = formatter.parse("1955/03/10");
+				birth = formatter.parse(year + "/" + month + "/" + day);
 			} catch (ParseException e) {
 				System.out.println(e.toString());
 				e.printStackTrace();
 			}
+			String genderString = (String) MyRegForm.genderList.getSelectedValue();
+			char[] genderTemp = genderString.substring(0).toCharArray();
+			char gender = genderTemp[0];
 			
 			if (name != "" & sname != "" & email != "" & cf != "" & pass1 != null & Arrays.equals(pass1, pass2)) {
 				if (client.model.Logic.registerUser(email, name, sname, birth, gender, cf, pass1) == 1) {
+					System.out.println("Utente " + name + " " + sname + " registrato correttamente.");
 					MyLogForm = new LoginForm();
 					MyRegForm.dispose();
 				} else {
-					
+					System.out.println("Creazione utente fallita.");
 				}
 			}
 		}

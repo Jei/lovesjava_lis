@@ -108,35 +108,45 @@ public class Logic {
 		byte[] md5pass = null;
 		String hexString;
 		User newUser = new User(); // Cpt. Obvious goes programming!
+		User checkUser;
 		
-		try {
-			// inizializzo l'oggetto per creare il digest
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			// resetto l'oggetto
-			md.reset();
-			String temp1 = new String(pass);
-			md.update(temp1.getBytes());
-			md5pass = md.digest();
-			hexString = byteArrayToHexString(md5pass);
-			System.out.println("MD5 password: " + hexString);
-		} catch(NoSuchAlgorithmException e1) {
-			System.out.println(e1.toString());
-			e1.printStackTrace();
-			return 0;
-		}
+		checkUser = DAL.DalRetrieveUserInfo(email);
+		if (checkUser == null) { 
 		
-		newUser.setName(name);
-		newUser.setSname(sname);
-		newUser.setEmail(email);
-		newUser.setBirth(birth);
-		newUser.setGender(gender);
-		newUser.setCf(cf);
-		newUser.setPass(hexString);
-		newUser.setAdm(0);
+			try {
+				// inizializzo l'oggetto per creare il digest
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				// resetto l'oggetto
+				md.reset();
+				String temp1 = new String(pass);
+				md.update(temp1.getBytes());
+				md5pass = md.digest();
+				hexString = byteArrayToHexString(md5pass);
+				System.out.println("MD5 password: " + hexString);
+			} catch(NoSuchAlgorithmException e1) {
+				System.out.println(e1.toString());
+				e1.printStackTrace();
+				return 0;
+			}
 		
-		if (DAL.DalCreateUser(newUser) == 1) {
-			return 1;
+			newUser.setName(name);
+			newUser.setSname(sname);
+			newUser.setEmail(email);
+			newUser.setBirth(birth);
+			newUser.setGender(gender);
+			newUser.setCf(cf);
+			newUser.setPass(hexString);
+			newUser.setAdm(0);
+		
+			if (DAL.DalCreateUser(newUser) == 1) {
+				System.out.println("Inserzione nel database riuscita.");
+				return 1;
+			} else {
+				System.out.println("Inserzione nel database fallita.");
+				return 0;
+			}
 		} else {
+			System.out.println("Utente con mail " + email + " già presente nel database.");
 			return 0;
 		}
 	}
