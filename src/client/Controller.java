@@ -79,85 +79,89 @@ public class Controller {
 			char[] pi = MyLogForm.PassInput.getPassword();
 			Logic.MyUser = new User();
 			if (Logic.MyUser.login(ui, pi) == 1) { // se il login va a buon fine
-	    		MyLogForm.dispose(); // rimuovo il frame di login
-				if (Logic.MyUser.adm == 0) { // se l'utente non è admin
-					MyUserPage = new UserPage(Logic.MyUser); // creo un nuovo frame utente
-					MyUserPage.addWindowListener(new WindowListener() {
-		    			@Override
-		    			public void windowOpened(WindowEvent e) {
-		    				
-		    			}
-		    			@Override
-		    			public void windowClosed(WindowEvent e) {
-		    				MyLogForm = new LoginForm(); // se la finestra utente viene chiusa non dal bottone
-		    				MyLogForm.setVisible(true);
-		    			}
-						@Override
-						public void windowActivated(WindowEvent e) {
-							// TODO Auto-generated method stub
+				if (Logic.MyUser.blocked == 0) {
+					MyLogForm.dispose(); // rimuovo il frame di login
+					if (Logic.MyUser.adm == 0) { // se l'utente non è admin
+						MyUserPage = new UserPage(Logic.MyUser); // creo un nuovo frame utente
+						MyUserPage.addWindowListener(new WindowListener() {
+							@Override
+							public void windowOpened(WindowEvent e) {
+								
+							}
+							@Override
+							public void windowClosed(WindowEvent e) {
+								MyLogForm = new LoginForm(); // se la finestra utente viene chiusa non dal bottone
+								MyLogForm.setVisible(true);
+							}
+							@Override
+							public void windowActivated(WindowEvent e) {
+								// TODO Auto-generated method stub
 							
-						}
-						@Override
-						public void windowClosing(WindowEvent e) {
-							// TODO Auto-generated method stub
+							}
+							@Override
+							public void windowClosing(WindowEvent e) {
+								// TODO Auto-generated method stub
 							
-						}
-						@Override
-						public void windowDeactivated(WindowEvent e) {
-							// TODO Auto-generated method stub
+							}
+							@Override
+							public void windowDeactivated(WindowEvent e) {
+								// TODO Auto-generated method stub
 							
-						}
-						@Override
-						public void windowDeiconified(WindowEvent e) {
-							// TODO Auto-generated method stub
+							}
+							@Override
+							public void windowDeiconified(WindowEvent e) {
+								// TODO Auto-generated method stub
 							
-						}
-						@Override
-						public void windowIconified(WindowEvent e) {
-							// TODO Auto-generated method stub
+							}
+							@Override
+							public void windowIconified(WindowEvent e) {
+								// TODO Auto-generated method stub
 							
-						}
-		    		});
-					MyUserPage.setVisible(true);
+							}
+						});
+						MyUserPage.setVisible(true);
+					} else {
+						MyAdminPage = new AdminPage(client.model.Logic.MyUser); // creo un nuovo frame utente
+						MyAdminPage.addWindowListener(new WindowListener() {
+			    			@Override
+			    			public void windowOpened(WindowEvent e) {
+			    				
+			    			}
+			    			@Override
+			    			public void windowClosed(WindowEvent e) {
+			    				MyLogForm = new LoginForm(); // se la finestra admin viene chiusa non dal bottone
+			    				MyLogForm.setVisible(true);
+			    			}
+							@Override
+							public void windowActivated(WindowEvent e) {
+								// TODO Auto-generated method stub
+								
+							}
+							@Override
+							public void windowClosing(WindowEvent e) {
+								// TODO Auto-generated method stub
+								
+							}
+							@Override
+							public void windowDeactivated(WindowEvent e) {
+								// TODO Auto-generated method stub
+								
+							}
+							@Override
+							public void windowDeiconified(WindowEvent e) {
+								// TODO Auto-generated method stub
+								
+							}
+							@Override
+							public void windowIconified(WindowEvent e) {
+								// TODO Auto-generated method stub
+								
+							}
+			    		});
+						MyAdminPage.setVisible(true);
+					}
 				} else {
-					MyAdminPage = new AdminPage(client.model.Logic.MyUser); // creo un nuovo frame utente
-					MyAdminPage.addWindowListener(new WindowListener() {
-		    			@Override
-		    			public void windowOpened(WindowEvent e) {
-		    				
-		    			}
-		    			@Override
-		    			public void windowClosed(WindowEvent e) {
-		    				MyLogForm = new LoginForm(); // se la finestra admin viene chiusa non dal bottone
-		    				MyLogForm.setVisible(true);
-		    			}
-						@Override
-						public void windowActivated(WindowEvent e) {
-							// TODO Auto-generated method stub
-							
-						}
-						@Override
-						public void windowClosing(WindowEvent e) {
-							// TODO Auto-generated method stub
-							
-						}
-						@Override
-						public void windowDeactivated(WindowEvent e) {
-							// TODO Auto-generated method stub
-							
-						}
-						@Override
-						public void windowDeiconified(WindowEvent e) {
-							// TODO Auto-generated method stub
-							
-						}
-						@Override
-						public void windowIconified(WindowEvent e) {
-							// TODO Auto-generated method stub
-							
-						}
-		    		});
-					MyAdminPage.setVisible(true);
+					System.out.println("L'utente è bloccato");
 				}
 			} else { // altrimenti visualizzo una notifica nella form di login
 				MyLogForm.ViewLoginError();

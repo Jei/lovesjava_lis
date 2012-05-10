@@ -15,8 +15,9 @@ public class User {
 	String pass;
 	public int adm;
 	Date birth;
-	char gender;
+	Character gender;
 	String cf;
+	public int blocked;
 	
 	public User() {
 	}
@@ -69,11 +70,11 @@ public class User {
 		this.adm = adm;
 	}
 	
-	public char getGender() {
+	public Character getGender() {
 		return this.gender;
 	}
 	
-	public void setGender(char gender) {
+	public void setGender(Character gender) {
 		this.gender = gender;
 	}
 	
@@ -91,6 +92,14 @@ public class User {
 	
 	public void setCf(String cf) {
 		this.cf = cf;
+	}
+	
+	public int getBlocked() {
+		return this.blocked;
+	}
+	
+	public void setBlocked(int blocked) {
+		this.blocked = blocked;
 	}
 	
 	public void modifyInfo(String name, String sname, char[] pass, Date birth, char gender, String cf) {
@@ -113,7 +122,7 @@ public class User {
 		String hexPass = null;
 		
 		User checkUser = DAL.DalRetrieveUserInfo(mail);
-		if (checkUser != null) {
+		if (checkUser.userId != null) {
 			try {
 				// inizializzo l'oggetto per creare il digest
 				MessageDigest md = MessageDigest.getInstance("MD5");

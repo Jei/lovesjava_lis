@@ -8,13 +8,14 @@
 		<id name="id" column="USER_ID">
 			<generator class="native"/>
 		</id>
-		<property name="name" column="USER_NAME"/>
-		<property name="sname" column="USER_SNAME" />
-		<property name="email" column="USER_EMAIL" />
-		<property name="pass" column="USER_PASS" />
-		<property name="adm" column="USER_ADM" />
-		<property name="gender" column="USER_GENDER" />
-		<property name="birth" column="USER_BIRTH" />
-		<property name="cf" column="USER_CF" />
+		<property name="name" column="USER_NAME" not-null="true"/>
+		<property name="sname" column="USER_SNAME" not-null="true"/>
+		<property name="email" column="USER_EMAIL" not-null="true"/>
+		<property name="pass" column="USER_PASS" not-null="true"/>
+		<property name="adm" column="USER_ADM" not-null="true"/>
+		<property name="gender" column="USER_GENDER" not-null="false"/>
+		<property name="birth" column="USER_BIRTH" not-null="false"/>
+		<property name="cf" column="USER_CF" not-null="false"/>
+		<property name="blocked" column="USER_BLOCKED" not-null="true"/>
 	</class>
 </hibernate-mapping> 
