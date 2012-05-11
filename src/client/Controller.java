@@ -216,6 +216,10 @@ public class Controller {
 				try {
 					MyLogic.registerUser(email, name, sname, birth, gender, cf, pass1);
 					System.out.println("Utente " + name + " " + sname + " registrato correttamente.");
+					JOptionPane.showMessageDialog(MyLogForm,
+							"Utente " + name + " " + sname + " registrato correttamente.",
+						    "Accesso fallito",
+						    JOptionPane.INFORMATION_MESSAGE);
 					MyLogForm = new LoginForm();
 					MyRegForm.dispose();
 				} catch (RegistrationException re) {
@@ -225,7 +229,6 @@ public class Controller {
 						    re.getMessage(),
 						    "Registrazione fallita",
 						    JOptionPane.WARNING_MESSAGE);
-					
 				}
 			}
 		}
