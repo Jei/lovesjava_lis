@@ -137,6 +137,7 @@ public class Logic {
 			newUser.setCf(cf);
 			newUser.setPass(hexString);
 			newUser.setAdm(0);
+			newUser.setBlocked(0);
 		
 			if (DAL.DalCreateUser(newUser) == 1) {
 				System.out.println("Inserzione nel database riuscita.");
