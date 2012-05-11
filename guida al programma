@@ -1,0 +1,41 @@
+ 
+Guida all'esecuzione del programma "CarPooling" su sistemi Linux.
+
+Nota: insieme al programma è allegato un file CarPooling.sql. Se non lo è, contattate il gruppo responsabile del progetto.
+
+Il programma necessita di un server MySQL
+In questa prima versione, il database sarà ospitato in locale dalla macchina che esegue il programma.
+
+Se sulla macchina non è già stato installato un server MySQL, lanciate da terminale il comando:
+
+sudo apt-get install mysql-server mysql-client
+
+Verrà richiesto l'inserimento di nome utente e password.
+Una volta terminata l'installazione, si può accedere a MySQL lanciando da terminale il comando:
+
+mysql -u root -p
+
+Una volta entrati in MySQL, per creare il database del programma, lanciate il comando:
+
+source <percorso del file .sql>/CarPooling.sql
+
+Dove <percorso del file .sql> è il percorso del file CarPooling.sql allegato al programma.
+MySQL darà la conferma dell'avvenuta creazione del database. Se viene restituito un errore, contattate il gruppo responsabile del progetto.
+
+Ora si può eseguire il programma CarPooling-0.01.jar.
+Può essere avviato in due modi:
+-Dal file manager: tasto destro sul file .jar --> Apri con --> OpenJDK Java 6 Runtime
+-Da terminale: java -jar CarPooling-0.01.jar
+
+L'installazione del database fornisce un amministratore già creato, con credenziali:
+email: admin@carpooling.it
+password: maiorca
+
+Le funzionalità disponibili in questa versione sono:
+-Registrazione di un nuovo utente
+-Login come utente
+-Login come amministratore
+
+La grafica non è proprio il massimo, ma ci arriveremo.
+
+  LovesJava - Jei
