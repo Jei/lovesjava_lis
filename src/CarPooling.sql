@@ -17,4 +17,4 @@ create table User (
 ); 
 
 insert into User (USER_NAME, USER_SNAME, USER_EMAIL, USER_PASS, USER_ADM, USER_BLOCKED)
-  values ("Horus", "Dio Uccello", "horus@giza.com", "5e7699f3c01b2c699017bc25fec8d44f", 1, 0);
+  values ("Ammini", "Stratore", "admin@carpooling.it", "5e7699f3c01b2c699017bc25fec8d44f", 1, 0);
