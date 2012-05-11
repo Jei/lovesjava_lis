@@ -24,12 +24,6 @@ public class View {
 		JPanel RegPanel = new JPanel();
 		JButton SubmitLogin = new JButton("Login");
 		JButton RegStart = new JButton("Registrati");
-		JLabel ErrorLabel = new JLabel("Valori di login errati!");
-		
-		public void ViewLoginError() {
-			LogPanel.add(ErrorLabel);
-			LogPanel.revalidate();
-		}
 		
 		// costruttore del frame di login
 		public LoginForm() {
@@ -91,7 +85,9 @@ public class View {
 		String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
 				"16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
 		String[] months = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-		String[] years = {"1990", "1991", "1992", "1993", "1994", "1995"};
+		String[] years = {"1970", "1971", "1972", "1973", "1974", "1975", "1976", "1977", "1978", "1979", 
+				"1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",
+				"1990", "1991", "1992", "1993", "1994"};
 		String[] genders = {"m", "f"};
 		private static final long serialVersionUID = 1L;
 		JTextField nameInput = new JTextField(10);
@@ -100,14 +96,10 @@ public class View {
 		JPasswordField passInput = new JPasswordField(10);
 		JPasswordField confirmInput = new JPasswordField(10);
 		JTextField cfInput = new JTextField(10);
-		JList dayList = new JList(days);
-		JList monthList = new JList(months);
-		JList yearList = new JList(years);
-		JScrollPane dayInput = new JScrollPane(dayList);
-		JScrollPane monthInput = new JScrollPane(monthList);
-		JScrollPane yearInput = new JScrollPane(yearList);
-		JList genderList = new JList(genders);
-		JScrollPane genderInput = new JScrollPane(genderList);
+		JComboBox dayInput = new JComboBox(days);
+		JComboBox monthInput = new JComboBox(months);
+		JComboBox yearInput = new JComboBox(years);
+		JComboBox genderInput = new JComboBox(genders);
 		
 		public RegisteringForm() {
 			
@@ -118,51 +110,69 @@ public class View {
 			
 			// panel dei campi di inserimento
 			JPanel inputPanel = new JPanel();
+			JPanel datePanel = new JPanel();
+			JPanel namePanel = new JPanel();
+			JPanel snamePanel = new JPanel();
+			JPanel emailPanel = new JPanel();
+			JPanel passPanel = new JPanel();
+			JPanel confirmPanel = new JPanel();
+			JPanel genderPanel = new JPanel();
+			JPanel cfPanel = new JPanel();
+			JPanel buttonsPanel = new JPanel();
 			
 			// imposto il layout a blocchi per il pannello di inserimento
 			inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.PAGE_AXIS));
+			datePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			snamePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			emailPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			passPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			confirmPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			genderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			cfPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			buttonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			
 			// aggiungo gli elementi di InputPanel
 			// nome
-			inputPanel.add(new JLabel("Nome:"));
-			inputPanel.add(nameInput);
+			namePanel.add(new JLabel("Nome:"));
+			namePanel.add(nameInput);
+			inputPanel.add(namePanel);
 			// cognome
-			inputPanel.add(new JLabel("Cognome"));
-			inputPanel.add(snameInput);
+			snamePanel.add(new JLabel("Cognome:"));
+			snamePanel.add(snameInput);
+			inputPanel.add(snamePanel);
 			// mail
-			inputPanel.add(new JLabel("E-mail:"));
-			inputPanel.add(mailInput);
+			emailPanel.add(new JLabel("E-mail:"));
+			emailPanel.add(mailInput);
+			inputPanel.add(emailPanel);
 			// password
-			inputPanel.add(new JLabel("Password:"));
-			inputPanel.add(passInput);
-			inputPanel.add(new JLabel("Conferma password:"));
-			inputPanel.add(confirmInput);
+			passPanel.add(new JLabel("Password:"));
+			passPanel.add(passInput);
+			inputPanel.add(passPanel);
+			confirmPanel.add(new JLabel("Conferma password:"));
+			confirmPanel.add(confirmInput);
+			inputPanel.add(confirmPanel);
 			// data di nascita
-			dayList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			dayList.setLayoutOrientation(JList.VERTICAL);
-			dayList.setVisibleRowCount(1);
-			monthList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			monthList.setLayoutOrientation(JList.VERTICAL);
-			monthList.setVisibleRowCount(1);
-			yearList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			yearList.setLayoutOrientation(JList.VERTICAL);
-			yearList.setVisibleRowCount(1);
-			inputPanel.add(dayInput);
-			inputPanel.add(monthInput);
-			inputPanel.add(yearInput);
-			genderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			genderList.setLayoutOrientation(JList.VERTICAL);
-			genderList.setVisibleRowCount(1);
-			inputPanel.add(genderInput);
+			inputPanel.add(new JLabel("Data di nascita (g/m/a):"));
+			datePanel.add(dayInput);
+			datePanel.add(monthInput);
+			datePanel.add(yearInput);
+			inputPanel.add(datePanel);
+			// sesso
+			genderPanel.add(new JLabel("Sesso:"));
+			genderPanel.add(genderInput);
+			inputPanel.add(genderPanel);
 			// codice fiscale
-			inputPanel.add(new JLabel("Codice Fiscale:"));
-			inputPanel.add(cfInput);
+			cfPanel.add(new JLabel("Codice Fiscale:"));
+			cfPanel.add(cfInput);
+			inputPanel.add(cfPanel);
 			// pulsante di invio registrazione
 			JButton submitRegistration = new JButton("Invia");
-			inputPanel.add(submitRegistration);
+			buttonsPanel.add(submitRegistration);
 			// pulsante di ritorno alla schermata di login
 			JButton cancelRegistration = new JButton("Annulla");
-			inputPanel.add(cancelRegistration);
+			buttonsPanel.add(cancelRegistration);
+			inputPanel.add(buttonsPanel);
 			
 			// aggiungo il pannello al frame
 	        add(inputPanel);

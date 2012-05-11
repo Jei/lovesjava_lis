@@ -114,7 +114,7 @@ public class User {
 		return 1;
 	}
 	
-	public int login(String mail, char[] pass) {
+	public void login(String mail, char[] pass) throws LoginException {
 		// qui ci andrà la richiesta al database
 		// intanto mettiamoci un falso login
 		byte[] md5pass = null;
@@ -122,7 +122,7 @@ public class User {
 		String hexPass = null;
 		
 		User checkUser = DAL.DalRetrieveUserInfo(mail);
-		if (checkUser.userId != null) {
+		if (checkUser != null) {
 			try {
 				// inizializzo l'oggetto per creare il digest
 				MessageDigest md = MessageDigest.getInstance("MD5");
@@ -140,12 +140,11 @@ public class User {
 			// confronto gli md5 delle due password
 			if (hexPass.equals(checkUser.pass)) {
 				Logic.MyUser = checkUser;
-				return 1;
 			} else {
-				return 0;
+				throw new LoginException("Password non valida.");
 			}
 		} else {
-			return 0;
+			throw new LoginException("Utente inesistente.");
 		}
 	}
 	
@@ -153,4 +152,18 @@ public class User {
 		return 1;
 	}
 
+	// ECCEZIONE: utente non trovato per il login
+	public class LoginException extends Exception {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public LoginException(String reason) {
+			super(reason);
+		}
+		
+	}
+	
 }

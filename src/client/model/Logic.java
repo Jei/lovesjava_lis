@@ -25,6 +25,10 @@ public class Logic {
 		   '8' , '9' , 'a' , 'b' ,
 		   'c' , 'd' , 'e' , 'f'};
 	
+	
+	public Logic() {
+	}
+	
 	/* Converte un array di byte in una stringa composta dai corrispondenti valori esadecimali.
 	 * Presa da http://mindprod.com/jgloss/hex.html
 	 * @param b byte[] da convertire in stringa di esadecimali
@@ -104,9 +108,9 @@ public class Logic {
 		
 	}
 	
-	public static int registerUser(String email, String name, String sname, Date birth, char gender, String cf, char[] pass) {
+	public void registerUser(String email, String name, String sname, Date birth, char gender, String cf, char[] pass) throws RegistrationException {
 		byte[] md5pass = null;
-		String hexString;
+		String hexString = null;
 		User newUser = new User(); // Cpt. Obvious goes programming!
 		User checkUser;
 		
@@ -126,7 +130,6 @@ public class Logic {
 			} catch(NoSuchAlgorithmException e1) {
 				System.out.println(e1.toString());
 				e1.printStackTrace();
-				return 0;
 			}
 		
 			newUser.setName(name);
@@ -141,15 +144,27 @@ public class Logic {
 		
 			if (DAL.DalCreateUser(newUser) == 1) {
 				System.out.println("Inserzione nel database riuscita.");
-				return 1;
 			} else {
 				System.out.println("Inserzione nel database fallita.");
-				return 0;
+				throw new RegistrationException("Errore nell'inserimento del nuovo utente nel database.");
 			}
 		} else {
 			System.out.println("Utente con mail " + email + " già presente nel database.");
-			return 0;
+			throw new RegistrationException("Utente con mail " + email + " già registrato.");
 		}
+	}
+	
+	public class RegistrationException extends Exception {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		
+		public RegistrationException(String reason) {
+			super(reason);
+		}
+		
 	}
 	
 }
