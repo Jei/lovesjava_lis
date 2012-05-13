@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Controller {
@@ -208,7 +209,7 @@ public class Controller {
 			char[] genderTemp = genderString.substring(0).toCharArray();
 			char gender = genderTemp[0];
 			
-			if (!name.equals("") && !sname.equals("") && !email.equals("") && !cf.equals("") && pass1 != null && Arrays.equals(pass1, pass2)) {
+			if (!name.equals("") && !sname.equals("") && !email.equals("") && !cf.equals("") && pass1.length != 0 && Arrays.equals(pass1, pass2)) {
 				System.out.println(name);
 				System.out.println(sname);
 				System.out.println(email);
@@ -218,18 +219,23 @@ public class Controller {
 					System.out.println("Utente " + name + " " + sname + " registrato correttamente.");
 					JOptionPane.showMessageDialog(MyLogForm,
 							"Utente " + name + " " + sname + " registrato correttamente.",
-						    "Accesso fallito",
+						    "Registrazione riuscita",
 						    JOptionPane.INFORMATION_MESSAGE);
 					MyLogForm = new LoginForm();
 					MyRegForm.dispose();
 				} catch (RegistrationException re) {
-					System.out.println(re);
 					System.out.println(re);
 					JOptionPane.showMessageDialog(MyLogForm,
 						    re.getMessage(),
 						    "Registrazione fallita",
 						    JOptionPane.WARNING_MESSAGE);
 				}
+			} else {
+				System.out.println("Non sono stati riempiti tutti i campi.");
+				JOptionPane.showMessageDialog(MyLogForm,
+					    "Non sono stati riempiti tutti i campi.",
+					    "Errore",
+					    JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
@@ -239,6 +245,157 @@ public class Controller {
 		public void actionPerformed(ActionEvent evt) {
 			MyLogForm = new LoginForm();
 			MyRegForm.dispose();
+		}
+	}
+	
+	//LISTENER PER BOTTONE VISUALIZZAZIONE PROFILO UTENTE
+	public static class ViewProfile implements ActionListener {
+		public void actionPerformed(ActionEvent evt) {
+			MyUserPage.MenuPanel.setVisible(false);
+			MyUserPage.UserInfoPanel.setVisible(true);
+			MyUserPage.pack();
+			MyUserPage.validate();
+		}
+	}
+	
+	//LISTENER PER BOTTONE INIZIO MODIFICA INFORMAZIONI UTENTE
+	public static class ModifyUserInfo implements ActionListener {
+		public void actionPerformed(ActionEvent evt) {
+			MyUserPage.ModifyUserInfoButton.setVisible(false);
+			MyUserPage.CancelModifyUserInfoButton.setVisible(true);
+			MyUserPage.SaveUserInfoButton.setVisible(true);
+			MyUserPage.nameInput.setEditable(true);
+			MyUserPage.snameInput.setEditable(true);
+			MyUserPage.nameInput.setEditable(true);
+			MyUserPage.passInput.setEditable(true);
+			MyUserPage.confirmInput.setEditable(true);
+			MyUserPage.dayInput.setEnabled(true);
+			MyUserPage.monthInput.setEnabled(true);
+			MyUserPage.yearInput.setEnabled(true);
+			MyUserPage.genderInput.setEnabled(true);
+			MyUserPage.cfInput.setEditable(true);
+			MyUserPage.pack();
+			MyUserPage.validate();
+		}
+	}
+	
+	//LISTENER PER BOTTONE SALVA NUOVE INFORMAZIONI UTENTE
+	public static class SaveUserInfo implements ActionListener {
+		public void actionPerformed(ActionEvent evt) {
+			String newName = MyUserPage.nameInput.getText();
+			String newSname = MyUserPage.snameInput.getText();
+			char[] newPass1 = MyUserPage.passInput.getPassword();
+			char[] newPass2 = MyUserPage.confirmInput.getPassword();
+			Date newBirth = null;
+			try {
+				String year = (String) MyUserPage.yearInput.getSelectedItem();
+				String month = (String) MyUserPage.monthInput.getSelectedItem();
+				String day = (String) MyUserPage.dayInput.getSelectedItem();
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+				newBirth = formatter.parse(year + "/" + month + "/" + day);
+			} catch (ParseException e) {
+				System.out.println(e.toString());
+				e.printStackTrace();
+			}
+			String newGenderString = (String) MyUserPage.genderInput.getSelectedItem();
+			char[] newGenderTemp = newGenderString.substring(0).toCharArray();
+			char newGender = newGenderTemp[0];
+			String newCf = MyUserPage.cfInput.getText();
+			
+			
+			if (!newName.equals("") && !newSname.equals("") && !newCf.equals("") && newPass1.length != 0 && Arrays.equals(newPass1, newPass2)) {
+			
+				try {
+					MyLogic.UpdateUserInfo(newName, newSname, newPass1, newBirth, newGender, newCf);
+					System.out.println("Informazioni utente modificate con successo.");
+					JOptionPane.showMessageDialog(MyLogForm,
+							"Informazioni utente modificate con successo.",
+						    "Modifica riuscita",
+						    JOptionPane.INFORMATION_MESSAGE);
+				} catch(UpdateException ue) {
+					System.out.println(ue);
+					JOptionPane.showMessageDialog(MyLogForm,
+						    ue.getMessage(),
+						    "Modifica fallita",
+						    JOptionPane.WARNING_MESSAGE);
+				} finally {
+					MyUserPage.nameInput.setText(Logic.MyUser.getName());
+					MyUserPage.snameInput.setText(Logic.MyUser.getSname());
+					MyUserPage.passInput.setText("");
+					MyUserPage.confirmInput.setText("");
+					Calendar dateReader = Calendar.getInstance();
+					dateReader.setTime(Logic.MyUser.getBirth());
+					MyUserPage.dayInput.setSelectedItem("" + dateReader.get(Calendar.DAY_OF_MONTH));
+					MyUserPage.monthInput.setSelectedItem("" + (dateReader.get(Calendar.MONTH) + 1)); //gennaio == 0
+					MyUserPage.yearInput.setSelectedItem("" + dateReader.get(Calendar.YEAR));
+					MyUserPage.genderInput.setSelectedItem("" + Logic.MyUser.getGender());
+					MyUserPage.cfInput.setText(Logic.MyUser.getCf());
+					MyUserPage.ModifyUserInfoButton.setVisible(true);
+					MyUserPage.CancelModifyUserInfoButton.setVisible(false);
+					MyUserPage.SaveUserInfoButton.setVisible(false);
+					MyUserPage.nameInput.setEditable(false);
+					MyUserPage.snameInput.setEditable(false);
+					MyUserPage.nameInput.setEditable(false);
+					MyUserPage.passInput.setEditable(false);
+					MyUserPage.confirmInput.setEditable(false);
+					MyUserPage.dayInput.setEnabled(false);
+					MyUserPage.monthInput.setEnabled(false);
+					MyUserPage.yearInput.setEnabled(false);
+					MyUserPage.genderInput.setEnabled(false);
+					MyUserPage.cfInput.setEditable(false);
+					MyUserPage.pack();
+					MyUserPage.validate();
+				}
+			} else {
+				System.out.println("Non sono stati riempiti tutti i campi.");
+				JOptionPane.showMessageDialog(MyLogForm,
+					    "Non sono stati riempiti tutti i campi.",
+					    "Errore",
+					    JOptionPane.ERROR_MESSAGE);
+			}
+			
+		}
+	}
+	
+	//LISTENER PER BOTTONE ANNULLA MODIFICA INFORMAZIONI UTENTE
+	public static class CancelModifyUserInfo implements ActionListener {
+		public void actionPerformed(ActionEvent evt) {
+			MyUserPage.nameInput.setText(Logic.MyUser.getName());
+			MyUserPage.snameInput.setText(Logic.MyUser.getSname());
+			MyUserPage.passInput.setText("");
+			MyUserPage.confirmInput.setText("");
+			Calendar dateReader = Calendar.getInstance();
+			dateReader.setTime(Logic.MyUser.getBirth());
+			MyUserPage.dayInput.setSelectedItem("" + dateReader.get(Calendar.DAY_OF_MONTH));
+			MyUserPage.monthInput.setSelectedItem("" + (dateReader.get(Calendar.MONTH) + 1)); //gennaio == 0
+			MyUserPage.yearInput.setSelectedItem("" + dateReader.get(Calendar.YEAR));
+			MyUserPage.genderInput.setSelectedItem("" + Logic.MyUser.getGender());
+			MyUserPage.cfInput.setText(Logic.MyUser.getCf());
+			MyUserPage.ModifyUserInfoButton.setVisible(true);
+			MyUserPage.CancelModifyUserInfoButton.setVisible(false);
+			MyUserPage.SaveUserInfoButton.setVisible(false);
+			MyUserPage.nameInput.setEditable(false);
+			MyUserPage.snameInput.setEditable(false);
+			MyUserPage.nameInput.setEditable(false);
+			MyUserPage.passInput.setEditable(false);
+			MyUserPage.confirmInput.setEditable(false);
+			MyUserPage.dayInput.setEnabled(false);
+			MyUserPage.monthInput.setEnabled(false);
+			MyUserPage.yearInput.setEnabled(false);
+			MyUserPage.genderInput.setEnabled(false);
+			MyUserPage.cfInput.setEditable(false);
+			MyUserPage.pack();
+			MyUserPage.validate();
+		}
+	}
+	
+	//LISTENER PER BOTTONE USCITA INFORMAZIONI UTENTE
+	public static class ExitUserInfo implements ActionListener {
+		public void actionPerformed(ActionEvent evt) {
+			MyUserPage.UserInfoPanel.setVisible(false);
+			MyUserPage.MenuPanel.setVisible(true);
+			MyUserPage.pack();
+			MyUserPage.validate();
 		}
 	}
 	

@@ -118,7 +118,6 @@ public class User {
 		// qui ci andrà la richiesta al database
 		// intanto mettiamoci un falso login
 		byte[] md5pass = null;
-		byte[] md5correct = null;
 		String hexPass = null;
 		
 		User checkUser = DAL.DalRetrieveUserInfo(mail);

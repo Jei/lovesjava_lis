@@ -11,8 +11,6 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
 import client.Controller;
-import client.model.User.*;
-import client.model.DAL.*;
 
 public class Logic {
 
@@ -108,6 +106,7 @@ public class Logic {
 		
 	}
 	
+	// REGISTRAZIONE NUOVO UTENTE
 	public void registerUser(String email, String name, String sname, Date birth, char gender, String cf, char[] pass) throws RegistrationException {
 		byte[] md5pass = null;
 		String hexString = null;
@@ -154,6 +153,49 @@ public class Logic {
 		}
 	}
 	
+	//MODIFICA INFORMAZIONI UTENTE
+	public void UpdateUserInfo(String name, String sname, char[] pass, Date birth, char gender, String cf) throws UpdateException {
+		byte[] md5pass = null;
+		String hexString = null;
+		User modifiedUser = new User();
+		
+		try {
+			// inizializzo l'oggetto per creare il digest
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			// resetto l'oggetto
+			md.reset();
+			String temp1 = new String(pass);
+			md.update(temp1.getBytes());
+			md5pass = md.digest();
+			hexString = byteArrayToHexString(md5pass);
+			System.out.println("MD5 password: " + hexString);
+		} catch(NoSuchAlgorithmException e1) {
+			System.out.println(e1.toString());
+			e1.printStackTrace();
+		}
+		
+		modifiedUser.setId(MyUser.getId());
+		modifiedUser.setName(name);
+		modifiedUser.setSname(sname);
+		modifiedUser.setEmail(MyUser.getEmail());
+		modifiedUser.setBirth(birth);
+		modifiedUser.setGender(gender);
+		modifiedUser.setCf(cf);
+		modifiedUser.setPass(hexString);
+		modifiedUser.setAdm(MyUser.getAdm());
+		modifiedUser.setBlocked(MyUser.getBlocked());
+		
+		if (DAL.DALUpdateUser(modifiedUser) == 1) {
+			MyUser = modifiedUser;
+		} else {
+			System.out.println("Modifica informazioni utente fallita.");
+			throw new UpdateException("Modifica informazioni utente fallita.");
+		}
+		
+	}
+	
+	
+	//ECCEZIONI
 	public class RegistrationException extends Exception {
 
 		/**
@@ -162,6 +204,19 @@ public class Logic {
 		private static final long serialVersionUID = 1L;
 		
 		public RegistrationException(String reason) {
+			super(reason);
+		}
+		
+	}
+	
+	public class UpdateException extends Exception {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		
+		public UpdateException(String reason) {
 			super(reason);
 		}
 		

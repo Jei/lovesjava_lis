@@ -1,6 +1,5 @@
 package client.model;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 import client.model.User;
@@ -8,7 +7,7 @@ import client.model.Logic;
 
 public class DAL {
 	
-	public static User DalRetrieveUserInfo(String email) throws HibernateException {
+	public static User DalRetrieveUserInfo(String email) {
 		Session session = null;
 		User foundUser = null;
 		try {
@@ -32,21 +31,42 @@ public class DAL {
 		Session session = null;
 		
 		try {
-			System.out.println("Apro la connessione.");
+			System.out.println("openSession");
 			session = Logic.MySessionFactory.openSession();
-			System.out.println("Comincio la transazione");
+			System.out.println("beginTransaction");
 			session.beginTransaction();
 			session.save(newUser);
-			// roba che crea il nuovo utente
-			System.out.println("Committo la transazione.");
+			System.out.println("commit");
 			session.getTransaction().commit();
-			System.out.println("Chiudo la connessione.");
+			System.out.println("close");
 			session.close();
 		} catch(Throwable he) {
 			System.out.println(he.toString());
 			he.printStackTrace();
 			return 0;
 		}
+		return 1;
+	}
+	
+	public static int DALUpdateUser(User target) {
+		Session session = null;
+		
+		try {
+			System.out.println("openSession");
+			session = Logic.MySessionFactory.openSession();
+			System.out.println("beginTransaction");
+			session.beginTransaction();
+			session.update(target);
+			System.out.println("commit");
+			session.getTransaction().commit();
+			System.out.println("close");
+			session.close();
+		} catch(Throwable he) {
+			System.out.println(he.toString());
+			he.printStackTrace();
+			return 0;
+		}
+		
 		return 1;
 	}
 

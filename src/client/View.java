@@ -4,12 +4,19 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.*;
 import client.Controller.*;
-import client.model.Logic;
 import client.model.User;
+import java.util.Calendar;
 
 public class View {
 	
 	static Controller controller;
+	static String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+			"16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
+	static String[] months = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+	static String[] years = {"1970", "1971", "1972", "1973", "1974", "1975", "1976", "1977", "1978", "1979", 
+			"1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",
+			"1990", "1991", "1992", "1993", "1994"};
+	static String[] genders = {"m", "f"};
 	
 	//FORM DI LOGIN
 	public static class LoginForm extends JFrame {
@@ -82,13 +89,6 @@ public class View {
 		/**
 		 * 
 		 */
-		String[] days = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
-				"16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
-		String[] months = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-		String[] years = {"1970", "1971", "1972", "1973", "1974", "1975", "1976", "1977", "1978", "1979", 
-				"1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",
-				"1990", "1991", "1992", "1993", "1994"};
-		String[] genders = {"m", "f"};
 		private static final long serialVersionUID = 1L;
 		JTextField nameInput = new JTextField(10);
 		JTextField snameInput = new JTextField(10);
@@ -199,19 +199,37 @@ public class View {
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
+		JTextField nameInput = new JTextField(10);
+		JTextField snameInput = new JTextField(10);
+		JTextField mailInput = new JTextField(10);
+		JPasswordField passInput = new JPasswordField(10);
+		JPasswordField confirmInput = new JPasswordField(10);
+		JTextField cfInput = new JTextField(10);
+		JComboBox dayInput = new JComboBox(days);
+		JComboBox monthInput = new JComboBox(months);
+		JComboBox yearInput = new JComboBox(years);
+		JComboBox genderInput = new JComboBox(genders);
+		JButton ExitUserInfoButton = new JButton("Esci");
+		JButton ModifyUserInfoButton = new JButton("Modifica");
+		JButton SaveUserInfoButton = new JButton("Salva");
+		JButton CancelModifyUserInfoButton = new JButton("Annulla");
+		
+		JPanel UserInfoPanel;
+		JPanel MenuPanel;
 
 		public UserPage(User user) {
 			// finestra
 			super("Car Pooling");
+
+			// MENU
+			MenuPanel = new JPanel();
 			
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			
-			JPanel MenuPanel = new JPanel();
 			
 			MenuPanel.setLayout(new BoxLayout(MenuPanel, BoxLayout.PAGE_AXIS));
 			
 			MenuPanel.add(new JLabel("Benvenuto " + user.getName() + " " + user.getSname()));
-			
+
 			JButton ViewOffersButton = new JButton("Visualizza offerte");
 			MenuPanel.add(ViewOffersButton);
 			JButton ViewProfileButton = new JButton("Il tuo profilo");
@@ -225,12 +243,106 @@ public class View {
 			JButton ExitButton = new JButton("Esci");
 			MenuPanel.add(ExitButton);
 			
+			// INFORMAZIONI UTENTE
+			UserInfoPanel = new JPanel();
+			
+			UserInfoPanel.setLayout(new BoxLayout(UserInfoPanel, BoxLayout.PAGE_AXIS));
+			
+			JPanel namePanel = new JPanel();
+			JPanel snamePanel = new JPanel();
+			JPanel passPanel = new JPanel();
+			JPanel confirmPanel = new JPanel();
+			JPanel datePanel = new JPanel();
+			JPanel genderPanel = new JPanel();
+			JPanel cfPanel = new JPanel();
+			JPanel buttonsPanel = new JPanel();
+			
+			datePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			snamePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			passPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			confirmPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			genderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			cfPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			buttonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			
+			// nome
+			namePanel.add(new JLabel("Nome:"));
+			nameInput.setText(user.getName());
+			nameInput.setEditable(false);
+			namePanel.add(nameInput);
+			UserInfoPanel.add(namePanel);
+			// cognome
+			snamePanel.add(new JLabel("Cognome:"));
+			snameInput.setText(user.getSname());
+			snameInput.setEditable(false);
+			snamePanel.add(snameInput);
+			UserInfoPanel.add(snamePanel);
+			// password
+			passPanel.add(new JLabel("Password:"));
+			passInput.setEditable(false);
+			passPanel.add(passInput);
+			UserInfoPanel.add(passPanel);
+			confirmPanel.add(new JLabel("Conferma password:"));
+			confirmInput.setEditable(false);
+			confirmPanel.add(confirmInput);
+			UserInfoPanel.add(confirmPanel);
+			// data di nascita
+			UserInfoPanel.add(new JLabel("Data di nascita (g/m/a):"));
+			Calendar dateReader = Calendar.getInstance();
+			dateReader.setTime(user.getBirth());
+			dayInput.setSelectedItem("" + dateReader.get(Calendar.DAY_OF_MONTH));
+			dayInput.setEnabled(false);
+			datePanel.add(dayInput);
+			monthInput.setSelectedItem("" + (dateReader.get(Calendar.MONTH) + 1));
+			monthInput.setEnabled(false);
+			datePanel.add(monthInput);
+			yearInput.setSelectedItem("" + dateReader.get(Calendar.YEAR));
+			yearInput.setEnabled(false);
+			datePanel.add(yearInput);
+			UserInfoPanel.add(datePanel);
+			// sesso
+			genderPanel.add(new JLabel("Sesso:"));
+			genderInput.setSelectedItem("" + user.getGender());
+			genderInput.setEnabled(false);
+			genderPanel.add(genderInput);
+			UserInfoPanel.add(genderPanel);
+			// codice fiscale
+			cfPanel.add(new JLabel("Codice Fiscale:"));
+			cfInput.setText(user.getCf());
+			cfInput.setEditable(false);
+			cfPanel.add(cfInput);
+			UserInfoPanel.add(cfPanel);
+			// pulsanti per modifica e uscita
+			buttonsPanel.add(ExitUserInfoButton);
+			buttonsPanel.add(ModifyUserInfoButton);
+			buttonsPanel.add(SaveUserInfoButton);
+			buttonsPanel.add(CancelModifyUserInfoButton);
+			SaveUserInfoButton.setVisible(false);
+			CancelModifyUserInfoButton.setVisible(false);
+			UserInfoPanel.add(buttonsPanel);
+			
+			
+			
 			add(MenuPanel);
+			UserInfoPanel.setVisible(false);
+			add(UserInfoPanel);
 			
 			setLayout(new FlowLayout());
 			
+			// ACTION LISTENER
 			ExitUserPage lol = new Controller.ExitUserPage();
 			ExitButton.addActionListener(lol);
+			ViewProfile viewp = new Controller.ViewProfile();
+			ViewProfileButton.addActionListener(viewp);
+			ModifyUserInfo modp = new Controller.ModifyUserInfo();
+			ModifyUserInfoButton.addActionListener(modp);
+			SaveUserInfo savep = new Controller.SaveUserInfo();
+			SaveUserInfoButton.addActionListener(savep);
+			CancelModifyUserInfo cancmodp = new Controller.CancelModifyUserInfo();
+			CancelModifyUserInfoButton.addActionListener(cancmodp);
+			ExitUserInfo exit = new Controller.ExitUserInfo();
+			ExitUserInfoButton.addActionListener(exit);
 			
 			pack();
 			
