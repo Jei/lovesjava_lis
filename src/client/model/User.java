@@ -114,7 +114,7 @@ public class User {
 		return 1;
 	}
 	
-	public void login(String mail, char[] pass) throws LoginException {
+	public int login(String mail, char[] pass) throws LoginException {
 		byte[] md5pass = null;
 		String hexPass = null;
 		
@@ -143,6 +143,8 @@ public class User {
 		} else {
 			throw new LoginException("Utente inesistente.");
 		}
+		
+		return 1;
 	}
 	
 	public int logout() {
