@@ -115,8 +115,6 @@ public class User {
 	}
 	
 	public void login(String mail, char[] pass) throws LoginException {
-		// qui ci andrà la richiesta al database
-		// intanto mettiamoci un falso login
 		byte[] md5pass = null;
 		String hexPass = null;
 		
