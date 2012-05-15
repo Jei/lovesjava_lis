@@ -110,10 +110,6 @@ public class User {
 		
 	}
 	
-	public int delete() {
-		return 1;
-	}
-	
 	public void login(String mail, char[] pass) throws LoginException {
 		// qui ci andrà la richiesta al database
 		// intanto mettiamoci un falso login

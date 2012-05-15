@@ -213,6 +213,7 @@ public class View {
 		JButton ModifyUserInfoButton = new JButton("Modifica");
 		JButton SaveUserInfoButton = new JButton("Salva");
 		JButton CancelModifyUserInfoButton = new JButton("Annulla");
+		JButton RemoveUserButton = new JButton("Cancella account");
 		
 		JPanel UserInfoPanel;
 		JPanel MenuPanel;
@@ -313,11 +314,12 @@ public class View {
 			cfInput.setEditable(false);
 			cfPanel.add(cfInput);
 			UserInfoPanel.add(cfPanel);
-			// pulsanti per modifica e uscita
+			// pulsanti per modifica, uscita dalla modifica e cancellazione account
 			buttonsPanel.add(ExitUserInfoButton);
 			buttonsPanel.add(ModifyUserInfoButton);
 			buttonsPanel.add(SaveUserInfoButton);
 			buttonsPanel.add(CancelModifyUserInfoButton);
+			buttonsPanel.add(RemoveUserButton);
 			SaveUserInfoButton.setVisible(false);
 			CancelModifyUserInfoButton.setVisible(false);
 			UserInfoPanel.add(buttonsPanel);
@@ -341,6 +343,8 @@ public class View {
 			SaveUserInfoButton.addActionListener(savep);
 			CancelModifyUserInfo cancmodp = new Controller.CancelModifyUserInfo();
 			CancelModifyUserInfoButton.addActionListener(cancmodp);
+			RemoveUser rem = new Controller.RemoveUser();
+			RemoveUserButton.addActionListener(rem);
 			ExitUserInfo exit = new Controller.ExitUserInfo();
 			ExitUserInfoButton.addActionListener(exit);
 			

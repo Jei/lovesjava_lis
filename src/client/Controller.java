@@ -399,6 +399,27 @@ public class Controller {
 		}
 	}
 	
+	//LISTENER PER BOTTONE CANCELLAZIONE ACCOUNT
+	public static class RemoveUser implements ActionListener {
+		public void actionPerformed(ActionEvent evt) {
+			try {
+				MyLogic.removeUser();
+				JOptionPane.showMessageDialog(MyLogForm,
+						"Account cancellato con successo.",
+					    "Cancellazione riuscita",
+					    JOptionPane.INFORMATION_MESSAGE);
+				MyLogForm = new LoginForm();
+				MyUserPage.dispose();
+			} catch(RemoveException re) {
+				System.out.println(re);
+				JOptionPane.showMessageDialog(MyLogForm,
+					    re.getMessage(),
+					    "Modifica fallita",
+					    JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
+	
 	//LISTENER PER BOTTONE USCITA DA PAGINA UTENTE
 	public static class ExitUserPage implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {

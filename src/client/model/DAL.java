@@ -69,5 +69,29 @@ public class DAL {
 		
 		return 1;
 	}
+	
+	public static int DALRemoveUser(String email) {
+		Session session = null;
+		User foundUser = null;
+		try {
+			System.out.println("openSession");
+			session = Logic.MySessionFactory.openSession();
+			System.out.println("beginTransaction");
+			session.beginTransaction();
+			// rimuovi utente con email "email"
+			foundUser = (User) session.createQuery("from User as user where USER_EMAIL = ?").setString(0, email).uniqueResult();
+			session.delete(foundUser);
+			System.out.println("commit");
+			session.getTransaction().commit();
+			System.out.println("close");
+			session.close();
+		} catch(Throwable he) {
+			System.out.println(he.toString());
+			he.printStackTrace();
+			return 0;
+		}
+		
+		return 1;
+	}
 
 }
