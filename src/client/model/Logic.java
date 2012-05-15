@@ -194,6 +194,25 @@ public class Logic {
 		
 	}
 	
+	public void removeUser() throws RemoveException {
+		
+		if (DAL.DALRemoveUser(MyUser.email) == 1) {
+			MyUser.setId(null);
+			MyUser.setName(null);
+			MyUser.setSname(null);
+			MyUser.setEmail(null);
+			MyUser.setPass(null);
+			MyUser.setAdm(0);
+			MyUser.setBirth(null);
+			MyUser.setGender(null);
+			MyUser.setCf(null);
+			MyUser.setBlocked(0);
+		} else {
+			throw new RemoveException("Cancellazione utente non riuscita.");
+		}
+		
+	}
+	
 	
 	//ECCEZIONI
 	public class RegistrationException extends Exception {
@@ -217,6 +236,20 @@ public class Logic {
 		private static final long serialVersionUID = 1L;
 		
 		public UpdateException(String reason) {
+			super(reason);
+		}
+		
+	}
+	
+	// ECCEZIONE: eliminazione non riuscita
+	public class RemoveException extends Exception {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public RemoveException(String reason) {
 			super(reason);
 		}
 		
