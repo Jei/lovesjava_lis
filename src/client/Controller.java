@@ -85,7 +85,7 @@ public class Controller {
 			char[] pi = MyLogForm.PassInput.getPassword();
 			Logic.MyUser = new User();
 			try {
-				Logic.MyUser.login(ui, pi); // provo a chiamare il login
+				MyLogic.login(ui, pi); // provo a chiamare il login
 				if (Logic.MyUser.blocked == 0) {
 					MyLogForm.dispose(); // rimuovo il frame di login
 					if (Logic.MyUser.adm == 0) { // se l'utente non è admin
@@ -423,7 +423,7 @@ public class Controller {
 	//LISTENER PER BOTTONE USCITA DA PAGINA UTENTE
 	public static class ExitUserPage implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
-			if (client.model.Logic.MyUser.logout() == 1) {
+			if (MyLogic.logout() == 1) {
 				MyLogForm = new LoginForm();
 				MyUserPage.dispose();
 			}
@@ -433,7 +433,7 @@ public class Controller {
 	//LISTENER PER BOTTONE USCITA DA PAGINA ADMIN
 	public static class ExitUserPageAd implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
-			if (client.model.Logic.MyUser.logout() == 1) {
+			if (MyLogic.logout() == 1) {
 				MyLogForm = new LoginForm();
 				MyAdminPage.dispose();
 			}

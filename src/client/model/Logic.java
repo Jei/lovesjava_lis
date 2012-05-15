@@ -213,6 +213,54 @@ public class Logic {
 		
 	}
 	
+	public void login(String mail, char[] pass) throws LoginException {
+		byte[] md5pass = null;
+		String hexPass = null;
+		
+		User checkUser = DAL.DalRetrieveUserInfo(mail);
+		if (checkUser != null) {
+			try {
+				// inizializzo l'oggetto per creare il digest
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				// resetto l'oggetto
+				md.reset();
+				// trasformo le due password in stringhe
+				String temp = new String(pass);
+				// creo lo md5 della password in input
+				md.update(temp.getBytes());
+				md5pass = md.digest();
+				hexPass = Logic.byteArrayToHexString(md5pass);
+			} catch (NoSuchAlgorithmException e1) {
+				e1.printStackTrace();
+			}
+			// confronto gli md5 delle due password
+			if (hexPass.equals(checkUser.pass)) {
+				Logic.MyUser = checkUser;
+			} else {
+				throw new LoginException("Password non valida.");
+			}
+		} else {
+			throw new LoginException("Utente inesistente.");
+		}
+	}
+	
+	public int logout() {
+		return 1;
+	}
+
+	// ECCEZIONE: utente non trovato per il login
+	public class LoginException extends Exception {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public LoginException(String reason) {
+			super(reason);
+		}
+		
+	}
 	
 	//ECCEZIONI
 	public class RegistrationException extends Exception {
