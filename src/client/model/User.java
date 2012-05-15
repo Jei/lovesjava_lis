@@ -139,8 +139,6 @@ public class User {
 		} else {
 			throw new LoginException("Utente inesistente.");
 		}
-		
-		return 1;
 	}
 	
 	public int logout() {
