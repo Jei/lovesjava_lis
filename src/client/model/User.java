@@ -1,10 +1,6 @@
 package client.model;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-
-import client.model.DAL;
 
 public class User {
 	

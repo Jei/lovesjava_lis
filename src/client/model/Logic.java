@@ -154,7 +154,7 @@ public class Logic {
 	}
 	
 	//MODIFICA INFORMAZIONI UTENTE
-	public void UpdateUserInfo(String name, String sname, char[] pass, Date birth, char gender, String cf) throws UpdateException {
+	public void updateUserInfo(String name, String sname, char[] pass, Date birth, char gender, String cf) throws UpdateException {
 		byte[] md5pass = null;
 		String hexString = null;
 		User modifiedUser = new User();
@@ -244,8 +244,17 @@ public class Logic {
 		}
 	}
 	
-	public int logout() {
-		return 1;
+	public void logout() throws LogoutException {
+		MyUser.setId(null);
+		MyUser.setName(null);
+		MyUser.setSname(null);
+		MyUser.setEmail(null);
+		MyUser.setPass(null);
+		MyUser.setAdm(0);
+		MyUser.setBirth(null);
+		MyUser.setGender(null);
+		MyUser.setCf(null);
+		MyUser.setBlocked(0);
 	}
 
 	// ECCEZIONE: utente non trovato per il login
@@ -298,6 +307,20 @@ public class Logic {
 		private static final long serialVersionUID = 1L;
 
 		public RemoveException(String reason) {
+			super(reason);
+		}
+		
+	}
+	
+	// ECCEZIONE: logout non riuscito
+	public class LogoutException extends Exception {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public LogoutException(String reason) {
 			super(reason);
 		}
 		

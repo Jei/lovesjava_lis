@@ -5,7 +5,6 @@ package client;
 import client.View.*;
 import client.model.*;
 import client.model.Logic.*;
-import client.model.User.*;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -306,7 +305,7 @@ public class Controller {
 			if (!newName.equals("") && !newSname.equals("") && !newCf.equals("") && newPass1.length != 0 && Arrays.equals(newPass1, newPass2)) {
 			
 				try {
-					MyLogic.UpdateUserInfo(newName, newSname, newPass1, newBirth, newGender, newCf);
+					MyLogic.updateUserInfo(newName, newSname, newPass1, newBirth, newGender, newCf);
 					System.out.println("Informazioni utente modificate con successo.");
 					JOptionPane.showMessageDialog(MyLogForm,
 							"Informazioni utente modificate con successo.",
@@ -423,9 +422,16 @@ public class Controller {
 	//LISTENER PER BOTTONE USCITA DA PAGINA UTENTE
 	public static class ExitUserPage implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
-			if (MyLogic.logout() == 1) {
+			try{
+				MyLogic.logout();
 				MyLogForm = new LoginForm();
 				MyUserPage.dispose();
+			} catch(LogoutException le) {
+				System.out.println(le);
+				JOptionPane.showMessageDialog(MyLogForm,
+					    le.getMessage(),
+					    "Logout fallito",
+					    JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}
@@ -433,9 +439,16 @@ public class Controller {
 	//LISTENER PER BOTTONE USCITA DA PAGINA ADMIN
 	public static class ExitUserPageAd implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
-			if (MyLogic.logout() == 1) {
+			try{
+				MyLogic.logout();
 				MyLogForm = new LoginForm();
 				MyAdminPage.dispose();
+			} catch(LogoutException le) {
+				System.out.println(le);
+				JOptionPane.showMessageDialog(MyLogForm,
+					    le.getMessage(),
+					    "Logout fallito",
+					    JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}
