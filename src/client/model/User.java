@@ -109,18 +109,8 @@ public class User {
 	public void register(String name, String sname, char[] pass, Date birth, char gender, String CF) {
 		
 	}
-	
-<<<<<<< HEAD
-	public int delete() {
-		return 1;
-	}
-	
+
 	public void login(String mail, char[] pass) throws LoginException {
-=======
-	public void login(String mail, char[] pass) throws LoginException {
-		// qui ci andrà la richiesta al database
-		// intanto mettiamoci un falso login
->>>>>>> jei_new
 		byte[] md5pass = null;
 		String hexPass = null;
 		
